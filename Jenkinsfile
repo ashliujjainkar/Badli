@@ -6,24 +6,40 @@ pipeline {
     }
 
     stages {
-        // stage('Clone Repository') {
-        //     steps {
-        //         echo "Starting to pull the repository..."
-        //         git branch: 'main', url: 'https://github.com/ashliujjainkar/Badli.git'
-        //         echo "Completed pulling the repository..."
-        //     }
-        // }
+        stage('Setup Workspace') {
+            steps {
+                script {
+                    // Create a unique temporary directory for the build
+                    def tempWorkspace = "${env.WORKSPACE}/build-${env.BUILD_ID}"
+                    dir(tempWorkspace) {
+                        // Use this directory as the workspace for all subsequent steps
+                        env.WORKSPACE = tempWorkspace
+                    }
+                }
+            }
+        }
+        stage('Clone Repository') {
+            steps {
+                dir(env.WORKSPACE) {
+                    echo 'Starting to pull the repository...'
+                    git branch: 'main', url: 'https://github.com/ashliujjainkar/Badli.git'
+                    echo 'Completed pulling the repository...'
+                }
+            }
+        }
 
         stage('Build Docker Image') {
             steps {
-                script {
-                    echo "Reading version file"
-                    IMAGE_VERSION = readFile('version.txt').trim()
-                    echo "Version read from version.txt: ${IMAGE_VERSION}"
+                dir(env.WORKSPACE) {
+                    script {
+                        echo 'Reading version file'
+                        IMAGE_VERSION = readFile('version.txt').trim()
+                        echo "Version read from version.txt: ${IMAGE_VERSION}"
 
-                    echo "Starting to build docker image"
-                    docker.build("ashliujjainkar/todo_list-flask-app:${IMAGE_VERSION}")
-                    echo "Completed building"
+                        echo 'Starting to build docker image'
+                        docker.build("ashliujjainkar/todo_list-flask-app:${IMAGE_VERSION}")
+                        echo 'Completed building'
+                    }
                 }
             }
         }
@@ -42,13 +58,13 @@ pipeline {
         //     steps {
         //         script {
         //             sleep 10
-                    
-        //             def response = sh(script: "curl -o /dev/null -s -w '%{http_code}' http://localhost:5000/version", returnStdout: true).trim()
-        //             if (response != '200') {
-        //                 error "Version API returned status ${response}"
-        //             }
-        //         }
-        //     }
-        // }
+
+    //             def response = sh(script: "curl -o /dev/null -s -w '%{http_code}' http://localhost:5000/version", returnStdout: true).trim()
+    //             if (response != '200') {
+    //                 error "Version API returned status ${response}"
+    //             }
+    //         }
+    //     }
+    // }
     }
 }

@@ -34,10 +34,10 @@ pipeline {
                     script {
                         echo 'starting docker cleanup'
                         // Kill and remove all containers
-                        sh "docker rm -f $(docker ps -a -q)"
+                        sh "docker rm -f \$(docker ps -a -q)"
 
                         // Remove all images
-                        sh "docker rmi -f $(docker images -q)"
+                        sh "docker rmi -f \$(docker images -q)"
                         echo 'completed docker cleanup'
                     }
                 }

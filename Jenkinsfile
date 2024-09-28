@@ -1,11 +1,6 @@
 pipeline {
     agent any
 
-    environment {
-        DOCKER_IMAGE = 'ashliujjainkar/todo_list-flask-app' // Replace with your Docker Hub repo
-        DOCKER_TAG = 'latest'
-    }
-
     stages {
         stage('Clone Repository') {
             steps {
@@ -23,7 +18,7 @@ pipeline {
                     echo "Version read from version.txt: ${version}"
 
                     echo "Starting to build docker image"
-                    docker.build("${DOCKER_IMAGE}:${DOCKER_TAG}")
+                    docker.build("Dockerfile")
                     echo "Completed building"
                 }
             }

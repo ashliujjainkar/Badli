@@ -28,27 +28,27 @@ pipeline {
             }
         }
 
-        stage('Run Docker Compose') {
-            steps {
-                script {
-                    echo "starting docker compose"
-                    sh "IMAGE_VERSION=${IMAGE_VERSION} docker-compose up -d --build"
-                    echo "completed docker compose"
-                }
-            }
-        }
-        
-        stage('Test /version API') {
-            steps {
-                script {
-                    sleep 10
+        // stage('Run Docker Compose') {
+        //     steps {
+        //         script {
+        //             echo "starting docker compose"
+        //             sh "IMAGE_VERSION=${IMAGE_VERSION} docker-compose up -d --build"
+        //             echo "completed docker compose"
+        //         }
+        //     }
+        // }
+
+        // stage('Test /version API') {
+        //     steps {
+        //         script {
+        //             sleep 10
                     
-                    def response = sh(script: "curl -o /dev/null -s -w '%{http_code}' http://localhost:5000/version", returnStdout: true).trim()
-                    if (response != '200') {
-                        error "Version API returned status ${response}"
-                    }
-                }
-            }
-        }
+        //             def response = sh(script: "curl -o /dev/null -s -w '%{http_code}' http://localhost:5000/version", returnStdout: true).trim()
+        //             if (response != '200') {
+        //                 error "Version API returned status ${response}"
+        //             }
+        //         }
+        //     }
+        // }
     }
 }

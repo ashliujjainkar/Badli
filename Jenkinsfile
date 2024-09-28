@@ -18,7 +18,7 @@ pipeline {
                     echo "Version read from version.txt: ${version}"
 
                     echo "Starting to build docker image"
-                    docker.build("Dockerfile")
+                    docker.build("ashliujjainkar/todo_list-flask-app:${version}")
                     echo "Completed building"
                 }
             }

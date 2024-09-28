@@ -1,25 +1,39 @@
 pipeline {
     agent any
 
+    environment {
+        IMAGE_VERSION = ''
+    }
+
     stages {
-        stage('Clone Repository') {
-            steps {
-                echo "Starting to pull the repository..."
-                git branch: 'main', url: 'https://github.com/ashliujjainkar/Badli.git'
-                echo "Completed pulling the repository..."
-            }
-        }
+        // stage('Clone Repository') {
+        //     steps {
+        //         echo "Starting to pull the repository..."
+        //         git branch: 'main', url: 'https://github.com/ashliujjainkar/Badli.git'
+        //         echo "Completed pulling the repository..."
+        //     }
+        // }
 
         stage('Build Docker Image') {
             steps {
                 script {
                     echo "Reading version file"
-                    def version = readFile('version.txt').trim()
-                    echo "Version read from version.txt: ${version}"
+                    IMAGE_VERSION = readFile('version.txt').trim()
+                    echo "Version read from version.txt: ${IMAGE_VERSION}"
 
                     echo "Starting to build docker image"
-                    docker.build("ashliujjainkar/todo_list-flask-app:${version}")
+                    docker.build("ashliujjainkar/todo_list-flask-app:${IMAGE_VERSION}")
                     echo "Completed building"
+                }
+            }
+        }
+
+        stage('Run Docker Compose') {
+            steps {
+                script {
+                    echo "starting docker compose"
+                    sh "IMAGE_VERSION=${IMAGE_VERSION} docker-compose up -d --build"
+                    echo "completed docker compose"
                 }
             }
         }

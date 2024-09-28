@@ -1,7 +1,7 @@
 version: '3'
 services:
   flask-app:
-    build: .
+    image: ashliujjainkar/todo_list-flask-app:${IMAGE_VERSION}
     ports:
       - "8888:8888"
     environment:

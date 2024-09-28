@@ -28,6 +28,22 @@ pipeline {
             }
         }
 
+        stage('Docker cleanup') {
+            steps {
+                dir(env.WORKSPACE) {
+                    script {
+                        echo 'starting docker cleanup'
+                        // Kill and remove all containers
+                        sh "docker rm -f $(docker ps -a -q)"
+
+                        // Remove all images
+                        sh "docker rmi -f $(docker images -q)"
+                        echo 'completed docker cleanup'
+                    }
+                }
+            }
+        }
+
         stage('Build Docker Image') {
             steps {
                 dir(env.WORKSPACE) {
@@ -43,6 +59,8 @@ pipeline {
                 }
             }
         }
+
+        
 
         stage('Run Docker Compose') {
             steps {
@@ -61,7 +79,7 @@ pipeline {
                 dir(env.WORKSPACE) {
                     script {
                         sleep 10
-                        def response = sh(script: "curl -o /dev/null -s -w '%{http_code}' http://localhost:5000/version", returnStdout: true).trim()
+                        def response = sh(script: "curl -o /dev/null -s -w '%{http_code}' http://localhost:8888/version", returnStdout: true).trim()
                         if (response != '200') {
                             error "Version API returned status ${response}"
                         }

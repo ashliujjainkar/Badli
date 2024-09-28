@@ -1,0 +1,13 @@
+TODO
+- Create a requirements.txt
+- Use requirements.txt to install packages in dockerfile
+- Create a version path in API
+- Jenkins
+    - Pull repo
+    - Build docker image
+    - Deploy push docker image to dockerhub with version tag
+    
+
+
+DONE
+

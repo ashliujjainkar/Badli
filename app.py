@@ -7,6 +7,13 @@ app = Flask(__name__)
 # with open('tasks.json','r') as f:
 #     tasks = json.load(f)
 
+version_file_path = os.path.join(os.getcwd(),"version.txt")
+api_version = "0.0"
+if os.path.exists(version_file_path):
+    with open(version_file_path,"r") as f:
+        api_version = f.read()
+print("API Version:",api_version)
+
 mongo_uri = os.environ.get('MONGO_URI','mongodb://localhost:27017')
 client = MongoClient(mongo_uri)
 db = client['tododb']
@@ -18,6 +25,11 @@ def task_serializer(task):
         'task': task
     }
 
+
+@app.route('/version', methods=['GET'])
+def get_version():
+    version = {"version":api_version}
+    return jsonify(version)
 
 @app.route('/list', methods=['GET'])
 def list_tasks():

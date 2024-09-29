@@ -40,6 +40,7 @@ def add_task():
     if new_task:
         task_id = tasks_collection.count_documents({})+1
         task = {'id': task_id,'task': new_task, 'completed': False} 
+        tasks_collection.insert_one(task)
         print("Task ID:",task['id'], flush=True) 
         return jsonify(task_serializer(task)), 201
     return jsonify({"error": "No task provided"}), 400

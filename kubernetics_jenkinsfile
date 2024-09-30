@@ -12,7 +12,7 @@ pipeline {
             steps {
                 script {
                     // Build Docker image
-                    def timestamp = new Date().format("yyyy-MM-dd'T'HH:mm:ss")
+                    def timestamp = new Date().format("yyyyMMdd-HHmmss")
                     docker.build("ashliujjainkar/todo_list-flask-app:${timestamp}","docker/")
                 }
             }

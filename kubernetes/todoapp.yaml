@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: flask-app
-        image: ashliujjainkar/todo_list-flask-app:v6
+        image: ashliujjainkar/todo_list-flask-app:IMAGE_TAG_PLACEHOLDER
         command: ["python"]
         args: ["app.py"] 
         ports:

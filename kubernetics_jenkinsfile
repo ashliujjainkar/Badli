@@ -19,7 +19,7 @@ pipeline {
                     echo 'Starting to build the image...'
                     // Build Docker image
                     // def timestamp = new Date().format("yyyyMMdd-HHmmss")
-                    docker.build("ashliujjainkar/todo_list-flask-app:v4","docker/")
+                    docker.build("ashliujjainkar/todo_list-flask-app:v4")
                     echo 'image build...'
                 }
             }
@@ -64,9 +64,11 @@ pipeline {
             steps {
                 script {
                     // Use kubectl to deploy the application
+                    echo 'Deploy to kubernetes...'
                     sh '''
                     kubectl apply -f kubernetes/todoapp.yaml
                     '''
+                    echo 'Deploy to kubernetes...'
                 }
             }
         }

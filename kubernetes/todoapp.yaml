@@ -1,0 +1,118 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flask-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: flask-app
+  template:
+    metadata:
+      labels:
+        app: flask-app
+    spec:
+      containers:
+      - name: flask-app
+        image: ashliujjainkar/todo_list-flask-app:v3
+        command: ["python"]
+        args: ["app.py"] 
+        ports:
+          - containerPort : 8888
+        env:
+          - name: MONGO_URI
+            value: "mongodb://mongo-service:27017/tododb"
+
+---
+
+# This is a comment
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mongo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mongo
+  template:
+    metadata:
+      labels:
+        app: mongo
+    spec:
+      containers:
+      - name: mongo
+        image: mongo:latest
+        ports:
+        - containerPort: 27017
+        volumeMounts:
+        - name: mongo-storage
+          mountPath: /data/db
+      volumes:
+      - name: mongo-storage
+        persistentVolumeClaim:
+          claimName: mongo-pvc
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name:  flask-app-service
+spec:
+  selector:
+    app:  flask-app
+  ports:
+  - port:  80
+    protocol: TCP
+    targetPort: 8888
+  type:  LoadBalancer 
+
+---
+
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: mongo-pv
+spec:
+  capacity:
+    storage: 5Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: manual
+  hostPath:
+    path: "/mnt/data"
+
+  
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mongo-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+  storageClassName: manual
+
+
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name:  mongo-service
+spec:
+  selector:
+    app:  mongo
+  type: ClusterIP 
+  ports:
+  - protocol: TCP
+    port:  27017
+    targetPort:  27017

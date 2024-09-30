@@ -32,6 +32,14 @@ pipeline {
                 }
             }
         }
+        stage('Update Kubernetes YAML with Timestamp') {
+            steps {
+                script {
+                    // Use `sed` to replace the placeholder in your YAML with the actual timestamp
+                    sh "sed -i 's|IMAGE_TAG_PLACEHOLDER|${TIMESTAMP}|g' kubernetes/todoapp.yaml"
+                }
+            }
+        }
         stage('Deploy to Kubernetes') {
             steps {
                 script {

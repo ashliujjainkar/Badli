@@ -3,16 +3,11 @@ TODO
 - Redeploy kubernetes pod and check if new code is running, test all APIs
 - Write end to end pipeline that does 
     - When code is changed and pushed, pipeline is triggered automatically
-    - New docker image is build, tag is the timestamp (24093291817)
-    - New deployment is triggered in kubernetes, that uses this latest image
     - The /version API shows the latest version tag in the API
 
 Bonus
 - Combine all yamls into a single yaml and delete/deploy using single command
 - Create a single command that automatically portforwards whichever flash pod is running, no need to edit the command. Hint: "watch" and "grep" commands
-
-Test:
--Check if old task are present in /list api
 
 DONE
 
@@ -23,3 +18,8 @@ DONE
     - Pull repo
     - Build docker image
     - Deploy push docker image to dockerhub with version tag
+    - New docker image is build, tag is the timestamp (24093291817)
+    - New deployment is triggered in kubernetes, that uses this latest image
+
+Test:
+-Check if old task are present in /list api

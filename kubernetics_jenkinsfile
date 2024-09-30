@@ -2,18 +2,18 @@ pipeline {
     agent any
 
     stages {
-        stage('Checkout') {
-            steps {
-                // Clone your GitHub repository
-                git 'https://github.com/ashliujjainkar/Badli.git'
-            }
-        }
+        // stage('Checkout') {
+        //     steps {
+        //         // Clone your GitHub repository
+        //         git 'https://github.com/ashliujjainkar/Badli.git'
+        //     }
+        // }
         stage('Build Docker Image') {
             steps {
                 script {
                     // Build Docker image
                     def timestamp = new Date().format("yyyy-MM-dd'T'HH:mm:ss")
-                    docker.build("ashliujjainkar/todo_list-flask-app:${timestamp}")
+                    docker.build("ashliujjainkar/todo_list-flask-app:${timestamp}","docker/")
                 }
             }
         }

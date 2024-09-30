@@ -3,6 +3,7 @@ pipeline {
 
     environment {
         TIMESTAMP = new Date().format("yyyyMMdd-HHmmss", TimeZone.getTimeZone('UTC'))
+        KUBECONFIG = 'kubeconfig'
     }
 
     stages {
@@ -15,9 +16,11 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
+                    echo 'Starting to build the image...'
                     // Build Docker image
                     // def timestamp = new Date().format("yyyyMMdd-HHmmss")
                     docker.build("ashliujjainkar/todo_list-flask-app:${TIMESTAMP}","docker/")
+                    echo 'image build...'
                 }
             }
         }
@@ -25,21 +28,38 @@ pipeline {
             steps {
                 script {
                     // Log in to Docker Hub
+                    echo 'Pushing the docker image...'
                     docker.withRegistry('https://index.docker.io/v1/', 'docker-hub-id') {
                         // Push Docker image
                         docker.image("ashliujjainkar/todo_list-flask-app:${TIMESTAMP}").push()
                     }
+                    echo 'Docker image pushed...'
                 }
             }
         }
         stage('Update Kubernetes YAML with Timestamp') {
             steps {
                 script {
+                    echo 'Update yaml with timestamp...'
                     // Use `sed` to replace the placeholder in your YAML with the actual timestamp
                     sh "sed -i 's|IMAGE_TAG_PLACEHOLDER|${TIMESTAMP}|g' kubernetes/todoapp.yaml"
+                    echo 'updated the timestamp...'
                 }
             }
         }
+        stage('Testing Kubernetes') {
+            steps {
+                script {
+                    // Use kubectl to deploy the application
+                    echo 'testing kubernetes...'
+                    sh '''
+                    kubectl get all
+                    '''
+                    echo 'kubernetes connected...'
+                }
+            }
+        }
+
         stage('Deploy to Kubernetes') {
             steps {
                 script {

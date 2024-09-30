@@ -11,6 +11,8 @@ Bonus
 - Combine all yamls into a single yaml and delete/deploy using single command
 - Create a single command that automatically portforwards whichever flash pod is running, no need to edit the command. Hint: "watch" and "grep" commands
 
+Test:
+-Check if old task are present in /list api
 
 DONE
 

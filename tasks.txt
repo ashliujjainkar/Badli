@@ -1,13 +1,17 @@
 TODO
-- Rebuild docker image, push it to dockerhub
-- Redeploy kubernetes pod and check if new code is running, test all APIs
-- Write end to end pipeline that does 
-    - When code is changed and pushed, pipeline is triggered automatically
-    - The /version API shows the latest version tag in the API
 
-Bonus
-- Combine all yamls into a single yaml and delete/deploy using single command
-- Create a single command that automatically portforwards whichever flash pod is running, no need to edit the command. Hint: "watch" and "grep" commands
+- Setup grafana dashboard for todolist app.
+python testing
+- Write unit tests and integrations tests using python testing framwork
+- Configure jenkins to run these tests before building an image
+2. Kubernetes
+- Scale up the app to use multiple pods
+- Add prometheus monitoring to monitor the following
+- Add grafana to plot all the charts
+  - requests and response codes for each API
+-  CPU and memory usage
+  - response time
+
 
 DONE
 
@@ -19,7 +23,34 @@ DONE
     - Build docker image
     - Deploy push docker image to dockerhub with version tag
     - New docker image is build, tag is the timestamp (24093291817)
-    - New deployment is triggered in kubernetes, that uses this latest image
+    - New deployment is triggered in kubernetes, that uses this latest 
+    
+- Write end to end pipeline that does 
+    - When code is changed and pushed, pipeline is triggered automatically
+
+- Rebuild docker image, push it to dockerhub
+- Redeploy kubernetes pod and check if new code is running, test all APIs
+- Write end to end pipeline that does 
+    - When code is changed and pushed, pipeline is triggered automatically
+    - The /version API shows the latest version tag in the API
+
+- Create Helm repo for todolist app.
+- Complete the bash project.
+    -Write a bash script that does the following
+    -Downloads the text from https://raw.githubusercontent.com/amephraim/nlp/refs/heads/master/texts/J.%20K.%20Rowling%20-%20Harry%20Potter%201%20-%20Sorcerer's%20Stone.txt and stores it in a text file
+    -Separates the words by splitting them by space
+    -Count the occurance of each word and sort them by the frequecy
+    -Take top 10 most frequent words and print them along with their frequencies
+    -For the top 10 words, search and replace all of their occurances by all caps version of that word in a new copy of the text file
+
+
+Bonus
+
+-Create a single command that automatically portforwards whichever flash pod is running, no need to edit the command. Hint: "watch" and "grep" commands
+    watch -n 1 "kubectl get pods | grep flask-app | grep Running && kubectl port-forward \$(kubectl get pods --no-headers -o custom-columns=:metadata.name | grep flask-app) 8888:8888"
+- Combine all yamls into a single yaml and delete/deploy using single command
+
+
 
 Test:
 -Check if old task are present in /list api

@@ -1,0 +1,124 @@
+# Deployment: Flask
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{.Values.app_name}}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{.Values.app_name}}
+  template:
+    metadata:
+      labels:
+        app: {{.Values.app_name}}
+    spec:
+      containers:
+      - name: flask-app
+        image: ashliujjainkar/todo_list-flask-app:20240930-192543
+        command: ["python"]
+        args: ["app.py"] 
+        ports:
+          - containerPort : 8888
+        env:
+          - name: MONGO_URI
+            value: "mongodb://mongo-service:27017/tododb"
+
+---
+
+# Deployment: Mongo
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{.Values.db_name}}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{.Values.db_name}}
+  template:
+    metadata:
+      labels:
+        app: {{.Values.db_name}}
+    spec:
+      containers:
+      - name: {{.Values.db_name}}
+        image: mongo:latest
+        ports:
+        - containerPort: 27017
+        volumeMounts:
+        - name: mongo-storage
+          mountPath: /data/db
+      volumes:
+      - name: mongo-storage
+        persistentVolumeClaim:
+          claimName: mongo-pvc
+
+---
+
+# Service : Flask
+
+apiVersion: v1
+kind: Service
+metadata:
+  name:  flask-app-service
+spec:
+  selector:
+    app:  {{.Values.app_name}}
+  ports:
+  - port:  80
+    protocol: TCP
+    targetPort: 8888
+  type:  LoadBalancer 
+
+---
+# Persistent Volume
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: mongo-pv
+spec:
+  capacity:
+    storage: 5Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: manual
+  hostPath:
+    path: "/mnt/data"
+
+  
+---
+# Persistent Volume Claim
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mongo-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+  storageClassName: manual
+
+
+
+---
+# Service: Mongo
+
+apiVersion: v1
+kind: Service
+metadata:
+  name:  mongo-service
+spec:
+  selector:
+    app:  {{.Values.db_name}}
+  type: ClusterIP 
+  ports:
+  - protocol: TCP
+    port:  27017
+    targetPort:  27017 

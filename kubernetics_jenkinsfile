@@ -7,12 +7,14 @@ pipeline {
     }
 
     stages {
-        // stage('Checkout') {
-        //     steps {
-        //         // Clone your GitHub repository
-        //         git 'https://github.com/ashliujjainkar/Badli.git'
-        //     }
-        // }
+        stage('Run Unit Tests') {
+            steps {
+                // run unit test before deploying
+                echo 'Starting Unit Testing'
+                sh "pytest test_app.py"
+                echo 'Completed Unit Testing'
+            }
+        }
         stage('Build Docker Image') {
             steps {
                 script {

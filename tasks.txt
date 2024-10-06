@@ -12,6 +12,15 @@ python testing
 -  CPU and memory usage
   - response time
 
+Write a ToDoList class that does the following
+1. When you create an object of this class, it initiates an empty todo list
+2. add() function that adds a task and assign a new unique id to it. By default, completed state is False
+3. remove() function that removes a task with a given id from the list
+4. complete() function that marks a tasks as completed with a given id
+5. incomplete() function that marks a tasks as incomplete with a given id
+6. list() function that lists all the tasks
+- Write unit tests for all these functions
+- Remove all the todolist related code from app.py and import the above class to handle the business logic.
 
 DONE
 

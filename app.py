@@ -1,9 +1,11 @@
 from flask import Flask, request, jsonify
+from prometheus_flask_exporter import PrometheusMetrics
 from todolist import ToDoList
 from pymongo import MongoClient
 from bson import ObjectId
 import os
 
+metrics = PrometheusMetrics(app)
 app = Flask(__name__)
 
 version_file_path = os.path.join(os.getcwd(), "version.txt")
